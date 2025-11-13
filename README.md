@@ -277,16 +277,6 @@ Cobertura alvo: geração de plano (v1/v2), alternância de item (incluindo `Com
 
 ---
 
-## 📌 Próximos Passos (sem perder a simplicidade)
-
-- Persistência real por SQL (Sqlite/SQL Server) com migrations e repositórios.  
-- Página pública com **OpenAPI docs** estáticos (ReDoc).  
-- **Coleção Postman** + *scripts* de *newman* para CI.  
-- RBAC simples (roles **User/Admin**) para gerenciar catálogo na v2.  
-- Métricas (Prometheus) via OpenTelemetry Metrics.
-
----
-
 ## 🔌 Comandos Rápidos
 
 ```bash
