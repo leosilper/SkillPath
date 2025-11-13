@@ -106,7 +106,30 @@ A maioria das operações de escrita (CREATE, UPDATE, DELETE) requer autenticaç
 
 ## 3. Testando CRUD de Skills
 
-### 3.1. READ - Listar Skills (Não requer autenticação)
+
+### 3.1. CREATE - Criar Skill (Requer autenticação)
+
+**Endpoint**: `POST /api/v1/skills`
+
+1. **Certifique-se de ter configurado o token** (seção 2.2)
+2. Clique em **"Try it out"**
+3. Preencha o body:
+
+```json
+{
+  "name": "Python Programming",
+  "description": "Fundamentos de programação em Python"
+}
+```
+
+4. Clique em **"Execute"**
+5. Verifique a resposta **201 Created** com o skill criado
+
+**Validações**:
+- `name`: Obrigatório, máximo 200 caracteres
+- `description`: Obrigatório, máximo 400 caracteres
+
+### 3.2. READ - Listar Skills (Não requer autenticação)
 
 **Endpoint**: `GET /api/v1/skills`
 
@@ -142,7 +165,7 @@ A maioria das operações de escrita (CREATE, UPDATE, DELETE) requer autenticaç
 }
 ```
 
-### 3.2. READ - Buscar Skill por ID (Não requer autenticação)
+### 3.3. READ - Buscar Skill por ID (Não requer autenticação)
 
 **Endpoint**: `GET /api/v1/skills/{id}`
 
@@ -158,28 +181,6 @@ A maioria das operações de escrita (CREATE, UPDATE, DELETE) requer autenticaç
   "description": "Fundamentos de programação em Python"
 }
 ```
-
-### 3.3. CREATE - Criar Skill (Requer autenticação)
-
-**Endpoint**: `POST /api/v1/skills`
-
-1. **Certifique-se de ter configurado o token** (seção 2.2)
-2. Clique em **"Try it out"**
-3. Preencha o body:
-
-```json
-{
-  "name": "Python Programming",
-  "description": "Fundamentos de programação em Python"
-}
-```
-
-4. Clique em **"Execute"**
-5. Verifique a resposta **201 Created** com o skill criado
-
-**Validações**:
-- `name`: Obrigatório, máximo 200 caracteres
-- `description`: Obrigatório, máximo 400 caracteres
 
 ### 3.4. UPDATE - Atualizar Skill (Requer autenticação)
 
