@@ -1,6 +1,6 @@
-# SkillShift Hub
+# SkillPath
 
-**SkillShift Hub é um planejador enxuto de requalificação para quem está em risco de automação. Sem IA “mágica” e sem microserviços: só o essencial, bem amarrado. O usuário informa a profissão atual, a área onde quer atuar (ex.: tecnologia, logística, atendimento, finanças) e o nível de escolaridade; a API aplica regras simples e devolve uma trilha curta (3–6 itens) de skills e cursos associados. Depois, o usuário acompanha o avanço marcando o que concluiu, vendo barra de progresso**.
+**SkillPath é um planejador enxuto de requalificação para quem está em risco de automação. Sem IA "mágica" e sem microserviços: só o essencial, bem amarrado. O usuário informa a profissão atual, a área onde quer atuar (ex.: tecnologia, logística, atendimento, finanças) e o nível de escolaridade; a API aplica regras simples e devolve uma trilha curta (3–6 itens) de skills e cursos associados. Depois, o usuário acompanha o avanço marcando o que concluiu, vendo barra de progresso**.
 
 ---
 
@@ -48,14 +48,14 @@ Entidades principais:
 ## 🏗️ Arquitetura em Camadas
 
 ```
-SkillShiftHub.sln
+SkillPath.sln
 /src
-  /SkillShiftHub.Api                # ASP.NET Core 8: Controllers, Swagger, Versioning, Auth middleware
-  /SkillShiftHub.Application        # Use cases (Auth/Plan), DTOs, validações, contratos
-  /SkillShiftHub.Domain             # Entidades ricas e interfaces de repositório
-  /SkillShiftHub.Infrastructure     # EF Core (InMemory/SQL), repositórios, JWT provider, DI, migrations
+  /SkillPath.Api                # ASP.NET Core 8: Controllers, Swagger, Versioning, Auth middleware
+  /SkillPath.Application        # Use cases (Auth/Plan), DTOs, validações, contratos
+  /SkillPath.Domain             # Entidades ricas e interfaces de repositório
+  /SkillPath.Infrastructure     # EF Core (InMemory/SQL), repositórios, JWT provider, DI, migrations
 /tests
-  /SkillShiftHub.Tests              # xUnit: serviços e integração HTTP
+  /SkillPath.Tests              # xUnit: serviços e integração HTTP
 ```
 
 Boas práticas aplicadas: **controllers finos**, **aplicação desacoplada de infra**, **injeção de dependências**, **tratamento de erros** consistente e **observabilidade** de ponta‑a‑ponta (trace + correlação).
@@ -67,7 +67,7 @@ Boas práticas aplicadas: **controllers finos**, **aplicação desacoplada de in
 Suporte a **dois modos** (via `appsettings.*`):
 
 1. **InMemory (padrão)** — ideal para desenvolvimento/avaliadores:
-   - Usa um banco único nomeado (ex.: `SkillShiftHubDb`) para evitar seeds “fantasmas”.
+   - Usa um banco único nomeado (ex.: `SkillPathDb`) para evitar seeds “fantasmas”.
    - Catálogo de *skills/cursos* é **seedado** na inicialização.
 
 2. **SQL (SqlServer/Oracle)** — produção ou POCs com persistência real:
@@ -75,7 +75,7 @@ Suporte a **dois modos** (via `appsettings.*`):
 {
   "Database": { "Provider": "SqlServer" }, // "Oracle" ou qualquer outro => InMemory
   "ConnectionStrings": {
-    "Default": "Server=localhost;Database=SkillShiftHub;Trusted_Connection=True;TrustServerCertificate=True"
+    "Default": "Server=localhost;Database=SkillPath;Trusted_Connection=True;TrustServerCertificate=True"
   },
   "Jwt": { "Key": "chave-super-secreta-com-no-minimo-32-caracteres!" }
 }
@@ -83,7 +83,7 @@ Suporte a **dois modos** (via `appsettings.*`):
 
 ### Migrations (quando SQL)
 ```bash
-dotnet ef database update   -s src/SkillShiftHub.Api/SkillShiftHub.Api.csproj   -p src/SkillShiftHub.Infrastructure/SkillShiftHub.Infrastructure.csproj
+dotnet ef database update   -s src/SkillPath.Api/SkillPath.Api.csproj   -p src/SkillPath.Infrastructure/SkillPath.Infrastructure.csproj
 ```
 
 ---
@@ -93,7 +93,7 @@ dotnet ef database update   -s src/SkillShiftHub.Api/SkillShiftHub.Api.csproj   
 ```bash
 dotnet restore
 dotnet build
-dotnet run --project src/SkillShiftHub.Api/SkillShiftHub.Api.csproj
+dotnet run --project src/SkillPath.Api/SkillPath.Api.csproj
 ```
 
 - **Swagger**: `https://localhost:5001/swagger` (ou a porta exibida no console)
@@ -226,7 +226,7 @@ dotnet test
 
 ### Modo watch (dev rápido)
 ```bash
-dotnet watch test --project tests/SkillShiftHub.Tests
+dotnet watch test --project tests/SkillPath.Tests
 ```
 
 ### Listar nomes exatos de testes
@@ -236,7 +236,7 @@ dotnet test --list-tests -v n
 
 ### Cobertura (opcional — `coverlet.collector` no projeto de testes)
 ```bash
-dotnet test tests/SkillShiftHub.Tests   /p:CollectCoverage=true   /p:CoverletOutputFormat=lcov   /p:CoverletOutput=./TestResults/coverage
+dotnet test tests/SkillPath.Tests   /p:CollectCoverage=true   /p:CoverletOutputFormat=lcov   /p:CoverletOutput=./TestResults/coverage
 ```
 
 Cobertura alvo: geração de plano (v1/v2), alternância de item (incluindo `CompletedAt`), paginação do catálogo e fluxo feliz de autenticação.
@@ -271,7 +271,7 @@ Cobertura alvo: geração de plano (v1/v2), alternância de item (incluindo `Com
 - **401 no /plans**: você não aplicou o token no Swagger (Authorize), ou token antigo/gerado com chave diferente. Gere login novamente e confira no bloco `curl` se aparece `Authorization: Bearer eyJ...`.
 - **400 “TargetArea”**: área‑alvo fora das palavras‑chave aceitas. Use “Tecnologia”, “Logística”, “Atendimento” ou “Finanças” (v2 aplica normalização e sinônimos; há *fallback* seguro).
 - **404 em /api/v2/...**: se a v2 não estiver habilitada no seu build, use **/api/v1**.  
-- **Seed do catálogo não aparece**: banco InMemory com **nomes diferentes** em cada run/versão. Use **um único nome** (`SkillShiftHubDb`) e reinicie a API.
+- **Seed do catálogo não aparece**: banco InMemory com **nomes diferentes** em cada run/versão. Use **um único nome** (`SkillPathDb`) e reinicie a API.
 - **Failed to fetch no Swagger**: use a **mesma origem/porta (HTTPS)** do Swagger e mantenha `SwaggerEndpoint` relativo.
 - **SQL/Oracle**: configure `ConnectionStrings:Default` e rode `dotnet ef database update` com `-s`/`-p` conforme acima.
 
@@ -282,6 +282,6 @@ Cobertura alvo: geração de plano (v1/v2), alternância de item (incluindo `Com
 ```bash
 dotnet restore
 dotnet build
-dotnet run --project src/SkillShiftHub.Api/SkillShiftHub.Api.csproj
+dotnet run --project src/SkillPath.Api/SkillPath.Api.csproj
 dotnet test
 ```

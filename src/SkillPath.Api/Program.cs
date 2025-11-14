@@ -171,7 +171,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Local"))
     {
         foreach (var description in apiVersionProvider.ApiVersionDescriptions)
         {
-            options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", $"SkillShift Hub API {description.ApiVersion}");
+            options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", $"SkillPath API {description.ApiVersion}");
         }
     });
 }

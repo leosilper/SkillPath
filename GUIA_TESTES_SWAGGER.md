@@ -1,6 +1,6 @@
-# Guia de Testes CRUD no Swagger - SkillShift Hub API
+# Guia de Testes CRUD no Swagger - SkillPath API
 
-Este guia detalha como testar todas as operações CRUD (Create, Read, Update, Delete) da SkillShift Hub API usando o Swagger UI.
+Este guia detalha como testar todas as operações CRUD (Create, Read, Update, Delete) da SkillPath API usando o Swagger UI.
 
 ## 📋 Índice
 
@@ -26,7 +26,7 @@ dotnet restore
 dotnet build
 
 # Executar a API
-dotnet run --project src/SkillShiftHub.Api/SkillShiftHub.Api.csproj
+dotnet run --project src/SkillPath.Api/SkillPath.Api.csproj
 ```
 
 ### 1.2. Abrir o Swagger UI
