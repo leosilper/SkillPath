@@ -598,7 +598,7 @@ partial class AppDbContextModelSnapshot : ModelSnapshot
                 b.HasIndex("Email")
                     .IsUnique();
 
-                b.ToTable("Users");
+                b.ToTable("USER_APP");
             });
 
         modelBuilder.Entity("SkillShiftHub.Domain.Entities.Course", b =>

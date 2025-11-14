@@ -11,8 +11,9 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 
         // Design-time connection string; replace by configuring appsettings for runtime.
+        // You can override this by setting the SKILLSHIFTHUB_MIGRATIONS_CONNECTION environment variable
         var connectionString = Environment.GetEnvironmentVariable("SKILLSHIFTHUB_MIGRATIONS_CONNECTION")
-                               ?? "User Id=skillshift;Password=skillshift;Data Source=//localhost:1521/XEPDB1;";
+                               ?? "User Id=rm557598;Password=040903;Data Source=oracle.fiap.com.br:1521/ORCL";
 
         optionsBuilder.UseOracle(connectionString, options =>
         {

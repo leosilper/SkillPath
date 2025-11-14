@@ -19,9 +19,14 @@ public static class DependencyInjection
         {
             var connectionString = configuration.GetConnectionString("Default");
             var provider = configuration.GetValue<string>("Database:Provider");
+            var databaseName = configuration.GetValue<string>("Database:InMemoryName") ?? "SkillShiftHubDb";
 
-            if (!string.IsNullOrWhiteSpace(connectionString) &&
-                string.Equals(provider, "Oracle", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(provider, "InMemory", StringComparison.OrdinalIgnoreCase))
+            {
+                options.UseInMemoryDatabase(databaseName);
+            }
+            else if (!string.IsNullOrWhiteSpace(connectionString) &&
+                     string.Equals(provider, "Oracle", StringComparison.OrdinalIgnoreCase))
             {
                 options.UseOracle(connectionString, oracleOptions =>
                 {
@@ -38,7 +43,8 @@ public static class DependencyInjection
             }
             else
             {
-                options.UseInMemoryDatabase("SkillShiftHubDb");
+                // Fallback to InMemory if no provider is specified
+                options.UseInMemoryDatabase(databaseName);
             }
         });
 

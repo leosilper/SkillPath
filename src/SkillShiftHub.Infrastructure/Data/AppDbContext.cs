@@ -42,6 +42,9 @@ public class AppDbContext : DbContext
             .HasMaxLength(120);
 
         modelBuilder.Entity<User>()
+            .ToTable("USER_APP");
+
+        modelBuilder.Entity<User>()
             .HasIndex(u => u.Email)
             .IsUnique();
 
