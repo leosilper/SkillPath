@@ -19,36 +19,34 @@ partial class AppDbContextModelSnapshot : ModelSnapshot
             .HasAnnotation("ProductVersion", "7.0.3")
             .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-        SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
         modelBuilder.Entity("SkillPath.Domain.Entities.Course", b =>
             {
                 b.Property<int>("Id")
-                    .HasColumnType("int");
+                    .HasColumnType("NUMBER(10)");
 
                 b.Property<string>("Name")
                     .IsRequired()
                     .HasMaxLength(220)
-                    .HasColumnType("nvarchar(220)");
+                    .HasColumnType("NVARCHAR2(220)");
 
                 b.Property<string>("Provider")
                     .IsRequired()
                     .HasMaxLength(160)
-                    .HasColumnType("nvarchar(160)");
+                    .HasColumnType("NVARCHAR2(160)");
 
                 b.Property<int>("SkillId")
-                    .HasColumnType("int");
+                    .HasColumnType("NUMBER(10)");
 
                 b.Property<string>("Url")
                     .IsRequired()
                     .HasMaxLength(400)
-                    .HasColumnType("nvarchar(400)");
+                    .HasColumnType("NVARCHAR2(400)");
 
                 b.HasKey("Id");
 
                 b.HasIndex("SkillId");
 
-                b.ToTable("Courses");
+                b.ToTable("COURSES");
 
                 b.HasData(
                     new
@@ -297,18 +295,18 @@ partial class AppDbContextModelSnapshot : ModelSnapshot
             {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
-                    .HasColumnType("uniqueidentifier");
+                    .HasColumnType("RAW(16)");
 
                 b.Property<DateTime>("CreatedAt")
-                    .HasColumnType("datetime2");
+                    .HasColumnType("TIMESTAMP(7)");
 
                 b.Property<string>("Title")
                     .IsRequired()
                     .HasMaxLength(200)
-                    .HasColumnType("nvarchar(200)");
+                    .HasColumnType("NVARCHAR2(200)");
 
                 b.Property<Guid>("UserId")
-                    .HasColumnType("uniqueidentifier");
+                    .HasColumnType("RAW(16)");
 
                 b.HasKey("Id");
 
@@ -316,31 +314,29 @@ partial class AppDbContextModelSnapshot : ModelSnapshot
 
                 b.HasIndex("UserId", "CreatedAt");
 
-                b.ToTable("Plans");
+                b.ToTable("PLANS");
             });
 
         modelBuilder.Entity("SkillPath.Domain.Entities.PlanItem", b =>
             {
                 b.Property<int>("Id")
                     .ValueGeneratedOnAdd()
-                    .HasColumnType("int");
-
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    .HasColumnType("NUMBER(10)");
 
                 b.Property<DateTime?>("CompletedAt")
-                    .HasColumnType("datetime2");
+                    .HasColumnType("TIMESTAMP(7)");
 
                 b.Property<bool>("IsCompleted")
-                    .HasColumnType("bit");
+                    .HasColumnType("NUMBER(1)");
 
                 b.Property<int>("Order")
-                    .HasColumnType("int");
+                    .HasColumnType("NUMBER(10)");
 
                 b.Property<Guid>("PlanId")
-                    .HasColumnType("uniqueidentifier");
+                    .HasColumnType("RAW(16)");
 
                 b.Property<int>("SkillId")
-                    .HasColumnType("int");
+                    .HasColumnType("NUMBER(10)");
 
                 b.HasKey("Id");
 
@@ -349,27 +345,27 @@ partial class AppDbContextModelSnapshot : ModelSnapshot
 
                 b.HasIndex("SkillId");
 
-                b.ToTable("PlanItems");
+                b.ToTable("PLAN_ITEMS");
             });
 
         modelBuilder.Entity("SkillPath.Domain.Entities.Skill", b =>
             {
                 b.Property<int>("Id")
-                    .HasColumnType("int");
+                    .HasColumnType("NUMBER(10)");
 
                 b.Property<string>("Description")
                     .IsRequired()
                     .HasMaxLength(400)
-                    .HasColumnType("nvarchar(400)");
+                    .HasColumnType("NVARCHAR2(400)");
 
                 b.Property<string>("Name")
                     .IsRequired()
                     .HasMaxLength(200)
-                    .HasColumnType("nvarchar(200)");
+                    .HasColumnType("NVARCHAR2(200)");
 
                 b.HasKey("Id");
 
-                b.ToTable("Skills");
+                b.ToTable("SKILLS");
 
                 b.HasData(
                     new
@@ -558,40 +554,40 @@ partial class AppDbContextModelSnapshot : ModelSnapshot
             {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
-                    .HasColumnType("uniqueidentifier");
+                    .HasColumnType("RAW(16)");
 
                 b.Property<string>("CurrentJob")
                     .IsRequired()
                     .HasMaxLength(160)
-                    .HasColumnType("nvarchar(160)");
+                    .HasColumnType("NVARCHAR2(160)");
 
                 b.Property<string>("EducationLevel")
                     .IsRequired()
                     .HasMaxLength(120)
-                    .HasColumnType("nvarchar(120)");
+                    .HasColumnType("NVARCHAR2(120)");
 
                 b.Property<string>("Email")
                     .IsRequired()
                     .HasMaxLength(160)
-                    .HasColumnType("nvarchar(160)");
+                    .HasColumnType("NVARCHAR2(160)");
 
                 b.Property<string>("Name")
                     .IsRequired()
                     .HasMaxLength(120)
-                    .HasColumnType("nvarchar(120)");
+                    .HasColumnType("NVARCHAR2(120)");
 
                 b.Property<string>("PasswordHash")
                     .IsRequired()
                     .HasMaxLength(256)
-                    .HasColumnType("nvarchar(256)");
+                    .HasColumnType("NVARCHAR2(256)");
 
                 b.Property<string>("TargetArea")
                     .IsRequired()
                     .HasMaxLength(160)
-                    .HasColumnType("nvarchar(160)");
+                    .HasColumnType("NVARCHAR2(160)");
 
                 b.Property<DateTime>("CreatedAt")
-                    .HasColumnType("datetime2");
+                    .HasColumnType("TIMESTAMP(7)");
 
                 b.HasKey("Id");
 

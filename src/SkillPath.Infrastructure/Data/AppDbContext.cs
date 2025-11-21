@@ -17,77 +17,168 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<User>()
-            .Property(u => u.Name)
-            .HasMaxLength(120);
+        // ===== USER (tabela USER_APP no banco) =====
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.ToTable("USER_APP");
+            
+            entity.Property(u => u.Id)
+                .HasColumnName("ID");
+            
+            entity.Property(u => u.Name)
+                .HasColumnName("NAME")
+                .HasMaxLength(120);
+            
+            entity.Property(u => u.Email)
+                .HasColumnName("EMAIL")
+                .HasMaxLength(160);
+            
+            entity.Property(u => u.PasswordHash)
+                .HasColumnName("PASSWORD_HASH")
+                .HasMaxLength(256);
+            
+            entity.Property(u => u.CurrentJob)
+                .HasColumnName("CURRENT_JOB")
+                .HasMaxLength(160);
+            
+            entity.Property(u => u.TargetArea)
+                .HasColumnName("TARGET_AREA")
+                .HasMaxLength(160);
+            
+            entity.Property(u => u.EducationLevel)
+                .HasColumnName("EDUCATION_LEVEL")
+                .HasMaxLength(120);
+            
+            entity.Property(u => u.CreatedAt)
+                .HasColumnName("CREATED_AT");
+            
+            entity.HasIndex(u => u.Email)
+                .HasDatabaseName("IX_USER_APP_EMAIL")
+                .IsUnique();
+        });
 
-        modelBuilder.Entity<User>()
-            .Property(u => u.Email)
-            .HasMaxLength(160);
+        // ===== SKILLS =====
+        modelBuilder.Entity<Skill>(entity =>
+        {
+            entity.ToTable("SKILLS");
+            
+            entity.Property(s => s.Id)
+                .HasColumnName("ID");
+            
+            entity.Property(s => s.Name)
+                .HasColumnName("NAME")
+                .HasMaxLength(200);
+            
+            entity.Property(s => s.Description)
+                .HasColumnName("DESCRIPTION")
+                .HasMaxLength(400);
+        });
 
-        modelBuilder.Entity<User>()
-            .Property(u => u.PasswordHash)
-            .HasMaxLength(256);
+        // ===== COURSES =====
+        modelBuilder.Entity<Course>(entity =>
+        {
+            entity.ToTable("COURSES");
+            
+            entity.Property(c => c.Id)
+                .HasColumnName("ID");
+            
+            entity.Property(c => c.Name)
+                .HasColumnName("NAME")
+                .HasMaxLength(220);
+            
+            entity.Property(c => c.Provider)
+                .HasColumnName("PROVIDER")
+                .HasMaxLength(160);
+            
+            entity.Property(c => c.Url)
+                .HasColumnName("URL")
+                .HasMaxLength(400);
+            
+            entity.Property(c => c.SkillId)
+                .HasColumnName("SKILL_ID");
+            
+            entity.HasOne(c => c.Skill)
+                .WithMany(s => s.Courses)
+                .HasForeignKey(c => c.SkillId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.HasIndex(c => c.SkillId)
+                .HasDatabaseName("IX_COURSES_SKILL_ID");
+        });
 
-        modelBuilder.Entity<User>()
-            .Property(u => u.CurrentJob)
-            .HasMaxLength(160);
+        // ===== PLANS =====
+        modelBuilder.Entity<Plan>(entity =>
+        {
+            entity.ToTable("PLANS");
+            
+            entity.Property(p => p.Id)
+                .HasColumnName("ID");
+            
+            entity.Property(p => p.UserId)
+                .HasColumnName("USER_ID");
+            
+            entity.Property(p => p.Title)
+                .HasColumnName("TITLE")
+                .HasMaxLength(200)
+                .HasDefaultValue("Trilha de Requalificação");
+            
+            entity.Property(p => p.CreatedAt)
+                .HasColumnName("CREATED_AT");
+            
+            entity.HasOne<User>()
+                .WithMany(u => u.Plans)
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.HasIndex(p => p.UserId)
+                .HasDatabaseName("IX_PLANS_USER_ID");
+            
+            entity.HasIndex(p => new { p.UserId, p.CreatedAt })
+                .HasDatabaseName("IX_PLANS_USER_ID_CREATED_AT");
+        });
 
-        modelBuilder.Entity<User>()
-            .Property(u => u.TargetArea)
-            .HasMaxLength(160);
-
-        modelBuilder.Entity<User>()
-            .Property(u => u.EducationLevel)
-            .HasMaxLength(120);
-
-        modelBuilder.Entity<User>()
-            .ToTable("USER_APP");
-
-        modelBuilder.Entity<User>()
-            .HasIndex(u => u.Email)
-            .IsUnique();
-
-        modelBuilder.Entity<Plan>()
-            .Property(p => p.Title)
-            .HasMaxLength(200);
-
-        modelBuilder.Entity<Plan>()
-            .HasMany(p => p.Items)
-            .WithOne()
-            .HasForeignKey(pi => pi.PlanId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<Plan>()
-            .HasIndex(p => new { p.UserId, p.CreatedAt });
-
-        modelBuilder.Entity<PlanItem>()
-            .HasIndex(pi => new { pi.PlanId, pi.Order })
-            .IsUnique();
-
-        modelBuilder.Entity<PlanItem>()
-            .Property(pi => pi.Id)
-            .ValueGeneratedOnAdd();
-
-        modelBuilder.Entity<Skill>()
-            .Property(s => s.Name)
-            .HasMaxLength(200);
-
-        modelBuilder.Entity<Skill>()
-            .Property(s => s.Description)
-            .HasMaxLength(400);
-
-        modelBuilder.Entity<Course>()
-            .Property(c => c.Name)
-            .HasMaxLength(220);
-
-        modelBuilder.Entity<Course>()
-            .Property(c => c.Provider)
-            .HasMaxLength(160);
-
-        modelBuilder.Entity<Course>()
-            .Property(c => c.Url)
-            .HasMaxLength(400);
+        // ===== PLAN_ITEMS =====
+        modelBuilder.Entity<PlanItem>(entity =>
+        {
+            entity.ToTable("PLAN_ITEMS");
+            
+            entity.Property(pi => pi.Id)
+                .HasColumnName("ID")
+                .ValueGeneratedOnAdd();
+            
+            entity.Property(pi => pi.PlanId)
+                .HasColumnName("PLAN_ID");
+            
+            entity.Property(pi => pi.SkillId)
+                .HasColumnName("SKILL_ID");
+            
+            entity.Property(pi => pi.Order)
+                .HasColumnName("ORDER_NUMBER");
+            
+            entity.Property(pi => pi.IsCompleted)
+                .HasColumnName("IS_COMPLETED")
+                .HasDefaultValue(0);
+            
+            entity.Property(pi => pi.CompletedAt)
+                .HasColumnName("COMPLETED_AT");
+            
+            entity.HasOne<Plan>()
+                .WithMany(p => p.Items)
+                .HasForeignKey(pi => pi.PlanId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.HasOne<Skill>()
+                .WithMany()
+                .HasForeignKey(pi => pi.SkillId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.HasIndex(pi => new { pi.PlanId, pi.Order })
+                .HasDatabaseName("IX_PLAN_ITEMS_PLAN_ID_ORDER")
+                .IsUnique();
+            
+            entity.HasIndex(pi => pi.SkillId)
+                .HasDatabaseName("IX_PLAN_ITEMS_SKILL_ID");
+        });
 
         var skills = new[]
         {

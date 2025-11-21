@@ -9,110 +9,142 @@ public partial class InitialCreate : Migration
 {
     protected override void Up(MigrationBuilder migrationBuilder)
     {
+        // Criar sequences primeiro
+        migrationBuilder.CreateSequence(
+            name: "SEQ_SKILLS",
+            startValue: 1L,
+            incrementBy: 1);
+
+        migrationBuilder.CreateSequence(
+            name: "SEQ_COURSES",
+            startValue: 1L,
+            incrementBy: 1);
+
+        migrationBuilder.CreateSequence(
+            name: "SEQ_PLAN_ITEMS",
+            startValue: 1L,
+            incrementBy: 1);
+
+        // Criar tabela SKILLS
         migrationBuilder.CreateTable(
-            name: "Skills",
+            name: "SKILLS",
             columns: table => new
             {
-                Id = table.Column<int>(type: "int", nullable: false),
-                Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                Description = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: false)
+                ID = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                NAME = table.Column<string>(type: "NVARCHAR2(200)", maxLength: 200, nullable: false),
+                DESCRIPTION = table.Column<string>(type: "NVARCHAR2(400)", maxLength: 400, nullable: false)
             },
             constraints: table =>
             {
-                table.PrimaryKey("PK_Skills", x => x.Id);
+                table.PrimaryKey("PK_SKILLS", x => x.ID);
             });
 
+        // Criar tabela USER_APP
         migrationBuilder.CreateTable(
-            name: "Users",
+            name: "USER_APP",
             columns: table => new
             {
-                Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                Name = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
-                Email = table.Column<string>(type: "nvarchar(160)", maxLength: 160, nullable: false),
-                PasswordHash = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                CurrentJob = table.Column<string>(type: "nvarchar(160)", maxLength: 160, nullable: false),
-                TargetArea = table.Column<string>(type: "nvarchar(160)", maxLength: 160, nullable: false),
-                EducationLevel = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
-                CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                ID = table.Column<Guid>(type: "RAW(16)", nullable: false),
+                NAME = table.Column<string>(type: "NVARCHAR2(120)", maxLength: 120, nullable: false),
+                EMAIL = table.Column<string>(type: "NVARCHAR2(160)", maxLength: 160, nullable: false),
+                PASSWORD_HASH = table.Column<string>(type: "NVARCHAR2(256)", maxLength: 256, nullable: false),
+                CURRENT_JOB = table.Column<string>(type: "NVARCHAR2(160)", maxLength: 160, nullable: false),
+                TARGET_AREA = table.Column<string>(type: "NVARCHAR2(160)", maxLength: 160, nullable: false),
+                EDUCATION_LEVEL = table.Column<string>(type: "NVARCHAR2(120)", maxLength: 120, nullable: false),
+                CREATED_AT = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false)
             },
             constraints: table =>
             {
-                table.PrimaryKey("PK_Users", x => x.Id);
+                table.PrimaryKey("PK_USER_APP", x => x.ID);
             });
 
+        // Criar tabela COURSES
         migrationBuilder.CreateTable(
-            name: "Courses",
+            name: "COURSES",
             columns: table => new
             {
-                Id = table.Column<int>(type: "int", nullable: false),
-                Name = table.Column<string>(type: "nvarchar(220)", maxLength: 220, nullable: false),
-                Provider = table.Column<string>(type: "nvarchar(160)", maxLength: 160, nullable: false),
-                Url = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: false),
-                SkillId = table.Column<int>(type: "int", nullable: false)
+                ID = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                NAME = table.Column<string>(type: "NVARCHAR2(220)", maxLength: 220, nullable: false),
+                PROVIDER = table.Column<string>(type: "NVARCHAR2(160)", maxLength: 160, nullable: false),
+                URL = table.Column<string>(type: "NVARCHAR2(400)", maxLength: 400, nullable: false),
+                SKILL_ID = table.Column<int>(type: "NUMBER(10)", nullable: false)
             },
             constraints: table =>
             {
-                table.PrimaryKey("PK_Courses", x => x.Id);
+                table.PrimaryKey("PK_COURSES", x => x.ID);
                 table.ForeignKey(
-                    name: "FK_Courses_Skills_SkillId",
-                    column: x => x.SkillId,
-                    principalTable: "Skills",
-                    principalColumn: "Id",
+                    name: "FK_COURSES_SKILLS_SKILL_ID",
+                    column: x => x.SKILL_ID,
+                    principalTable: "SKILLS",
+                    principalColumn: "ID",
                     onDelete: ReferentialAction.Cascade);
             });
 
+        // Criar tabela PLANS
         migrationBuilder.CreateTable(
-            name: "Plans",
+            name: "PLANS",
             columns: table => new
             {
-                Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                ID = table.Column<Guid>(type: "RAW(16)", nullable: false),
+                USER_ID = table.Column<Guid>(type: "RAW(16)", nullable: false),
+                TITLE = table.Column<string>(type: "NVARCHAR2(200)", maxLength: 200, nullable: false),
+                CREATED_AT = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false)
             },
             constraints: table =>
             {
-                table.PrimaryKey("PK_Plans", x => x.Id);
+                table.PrimaryKey("PK_PLANS", x => x.ID);
                 table.ForeignKey(
-                    name: "FK_Plans_Users_UserId",
-                    column: x => x.UserId,
-                    principalTable: "Users",
-                    principalColumn: "Id",
+                    name: "FK_PLANS_USER_APP_USER_ID",
+                    column: x => x.USER_ID,
+                    principalTable: "USER_APP",
+                    principalColumn: "ID",
                     onDelete: ReferentialAction.Cascade);
             });
 
+        // Criar tabela PLAN_ITEMS
         migrationBuilder.CreateTable(
-            name: "PlanItems",
+            name: "PLAN_ITEMS",
             columns: table => new
             {
-                Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("SqlServer:Identity", "1, 1"),
-                PlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                SkillId = table.Column<int>(type: "int", nullable: false),
-                Order = table.Column<int>(type: "int", nullable: false),
-                IsCompleted = table.Column<bool>(type: "bit", nullable: false),
-                CompletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                ID = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                PLAN_ID = table.Column<Guid>(type: "RAW(16)", nullable: false),
+                SKILL_ID = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                ORDER_NUMBER = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                IS_COMPLETED = table.Column<bool>(type: "NUMBER(1)", nullable: false),
+                COMPLETED_AT = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true)
             },
             constraints: table =>
             {
-                table.PrimaryKey("PK_PlanItems", x => x.Id);
+                table.PrimaryKey("PK_PLAN_ITEMS", x => x.ID);
                 table.ForeignKey(
-                    name: "FK_PlanItems_Plans_PlanId",
-                    column: x => x.PlanId,
-                    principalTable: "Plans",
-                    principalColumn: "Id",
+                    name: "FK_PLAN_ITEMS_PLANS_PLAN_ID",
+                    column: x => x.PLAN_ID,
+                    principalTable: "PLANS",
+                    principalColumn: "ID",
                     onDelete: ReferentialAction.Cascade);
                 table.ForeignKey(
-                    name: "FK_PlanItems_Skills_SkillId",
-                    column: x => x.SkillId,
-                    principalTable: "Skills",
-                    principalColumn: "Id",
+                    name: "FK_PLAN_ITEMS_SKILLS_SKILL_ID",
+                    column: x => x.SKILL_ID,
+                    principalTable: "SKILLS",
+                    principalColumn: "ID",
                     onDelete: ReferentialAction.Cascade);
             });
 
+        // Criar trigger para PLAN_ITEMS
+        migrationBuilder.Sql(@"
+            CREATE OR REPLACE TRIGGER TRG_PLAN_ITEMS_ID
+            BEFORE INSERT ON ""PLAN_ITEMS""
+            FOR EACH ROW
+            BEGIN
+                IF :NEW.""ID"" IS NULL THEN
+                    SELECT SEQ_PLAN_ITEMS.NEXTVAL INTO :NEW.""ID"" FROM DUAL;
+                END IF;
+            END;");
+
+        // Insert data - Skills
         migrationBuilder.InsertData(
-            table: "Skills",
-            columns: new[] { "Id", "Name", "Description" },
+            table: "SKILLS",
+            columns: new[] { "ID", "NAME", "DESCRIPTION" },
             values: new object[,]
             {
                 { 1, "Lógica de Programação (iniciante)", "Fundamentos de algoritmos, estruturas condicionais e resolução de problemas." },
@@ -147,9 +179,10 @@ public partial class InitialCreate : Migration
                 { 30, "Noções de JavaScript (básico)", "Sintaxe essencial, manipulação de DOM e eventos." }
             });
 
+        // Insert data - Courses
         migrationBuilder.InsertData(
-            table: "Courses",
-            columns: new[] { "Id", "Name", "Provider", "Url", "SkillId" },
+            table: "COURSES",
+            columns: new[] { "ID", "NAME", "PROVIDER", "URL", "SKILL_ID" },
             values: new object[,]
             {
                 { 1, "Lógica de Programação com C# e Jogos", "Alura", "https://example.com/logica-iniciante", 1 },
@@ -184,58 +217,52 @@ public partial class InitialCreate : Migration
                 { 30, "JavaScript para Iniciantes", "freeCodeCamp", "https://example.com/js-basico", 30 }
             });
 
+        // Criar índices
         migrationBuilder.CreateIndex(
-            name: "IX_Courses_SkillId",
-            table: "Courses",
-            column: "SkillId");
+            name: "IX_COURSES_SKILL_ID",
+            table: "COURSES",
+            column: "SKILL_ID");
 
         migrationBuilder.CreateIndex(
-            name: "IX_PlanItems_PlanId_Order",
-            table: "PlanItems",
-            columns: new[] { "PlanId", "Order" },
+            name: "IX_PLAN_ITEMS_PLAN_ID_ORDER",
+            table: "PLAN_ITEMS",
+            columns: new[] { "PLAN_ID", "ORDER_NUMBER" },
             unique: true);
 
         migrationBuilder.CreateIndex(
-            name: "IX_PlanItems_SkillId",
-            table: "PlanItems",
-            column: "SkillId");
+            name: "IX_PLAN_ITEMS_SKILL_ID",
+            table: "PLAN_ITEMS",
+            column: "SKILL_ID");
 
         migrationBuilder.CreateIndex(
-            name: "IX_Plans_UserId",
-            table: "Plans",
-            column: "UserId");
+            name: "IX_PLANS_USER_ID",
+            table: "PLANS",
+            column: "USER_ID");
 
         migrationBuilder.CreateIndex(
-            name: "IX_Plans_UserId_CreatedAt",
-            table: "Plans",
-            columns: new[] { "UserId", "CreatedAt" });
+            name: "IX_PLANS_USER_ID_CREATED_AT",
+            table: "PLANS",
+            columns: new[] { "USER_ID", "CREATED_AT" });
 
         migrationBuilder.CreateIndex(
-            name: "IX_Users_Email",
-            table: "Users",
-            column: "Email",
+            name: "IX_USER_APP_EMAIL",
+            table: "USER_APP",
+            column: "EMAIL",
             unique: true);
     }
 
     protected override void Down(MigrationBuilder migrationBuilder)
     {
-        migrationBuilder.DropTable(
-            name: "Courses");
+        migrationBuilder.Sql("DROP TRIGGER TRG_PLAN_ITEMS_ID");
+        
+        migrationBuilder.DropTable(name: "COURSES");
+        migrationBuilder.DropTable(name: "PLAN_ITEMS");
+        migrationBuilder.DropTable(name: "PLANS");
+        migrationBuilder.DropTable(name: "SKILLS");
+        migrationBuilder.DropTable(name: "USER_APP");
 
-        migrationBuilder.DropTable(
-            name: "PlanItems");
-
-        migrationBuilder.DropTable(
-            name: "Plans");
-
-        migrationBuilder.DropTable(
-            name: "Skills");
-
-        migrationBuilder.DropTable(
-            name: "Users");
+        migrationBuilder.DropSequence(name: "SEQ_PLAN_ITEMS");
+        migrationBuilder.DropSequence(name: "SEQ_COURSES");
+        migrationBuilder.DropSequence(name: "SEQ_SKILLS");
     }
 }
-
-
-
-
