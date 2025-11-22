@@ -55,6 +55,76 @@ public class AuthService : IAuthService
         return new AuthResponse(user.Id, user.Name, user.Email, token);
     }
 
+    public async Task<UserResponse> GetUserAsync(Guid userId)
+    {
+        var user = await _users.GetByIdAsync(userId)
+                   ?? throw new NotFoundAppException("User");
+        
+        return new UserResponse(
+            user.Id,
+            user.Name,
+            user.Email,
+            user.CurrentJob,
+            user.TargetArea,
+            user.EducationLevel,
+            user.CreatedAt
+        );
+    }
+
+    public async Task<UserResponse> UpdateUserAsync(Guid userId, UpdateUserRequest request)
+    {
+        var user = await _users.GetByIdAsync(userId)
+                   ?? throw new NotFoundAppException("User");
+
+        // Verificar se o email já está em uso por outro usuário
+        if (!string.IsNullOrWhiteSpace(request.Email) && request.Email != user.Email)
+        {
+            var existing = await _users.GetByEmailAsync(request.Email);
+            if (existing is not null && existing.Id != userId)
+                throw new ConflictAppException("E-mail já cadastrado.");
+        }
+
+        // Atualizar apenas os campos fornecidos
+        if (!string.IsNullOrWhiteSpace(request.Name))
+            user.Name = request.Name;
+
+        if (!string.IsNullOrWhiteSpace(request.Email))
+            user.Email = request.Email;
+
+        if (!string.IsNullOrWhiteSpace(request.Password))
+            user.PasswordHash = Hash(request.Password);
+
+        if (!string.IsNullOrWhiteSpace(request.CurrentJob))
+            user.CurrentJob = request.CurrentJob;
+
+        if (!string.IsNullOrWhiteSpace(request.TargetArea))
+            user.TargetArea = request.TargetArea;
+
+        if (!string.IsNullOrWhiteSpace(request.EducationLevel))
+            user.EducationLevel = request.EducationLevel;
+
+        await _users.UpdateAsync(user);
+
+        return new UserResponse(
+            user.Id,
+            user.Name,
+            user.Email,
+            user.CurrentJob,
+            user.TargetArea,
+            user.EducationLevel,
+            user.CreatedAt
+        );
+    }
+
+    public async Task DeleteUserAsync(Guid userId)
+    {
+        var user = await _users.GetByIdAsync(userId);
+        if (user == null)
+            throw new NotFoundAppException("User");
+
+        await _users.DeleteAsync(userId);
+    }
+
     private static string Hash(string input)
     {
         using var sha = SHA256.Create();

@@ -160,7 +160,10 @@ public class PlanService : IPlanService
 
     private static List<Skill> SuggestSkills(User user, IReadOnlyList<Skill> all)
     {
-        var normalized = all.ToDictionary(s => s.Name, StringComparer.OrdinalIgnoreCase);
+        // Usar GroupBy para lidar com Skills duplicados (pegar apenas o primeiro de cada nome)
+        var normalized = all
+            .GroupBy(s => s.Name, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
 
         var targetAreaKey = ResolveAreaKey(user.TargetArea);
 

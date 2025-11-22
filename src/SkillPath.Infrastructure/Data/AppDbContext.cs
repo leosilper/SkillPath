@@ -63,7 +63,8 @@ public class AppDbContext : DbContext
             entity.ToTable("SKILLS");
             
             entity.Property(s => s.Id)
-                .HasColumnName("ID");
+                .HasColumnName("ID")
+                .ValueGeneratedOnAdd();
             
             entity.Property(s => s.Name)
                 .HasColumnName("NAME")
@@ -80,7 +81,8 @@ public class AppDbContext : DbContext
             entity.ToTable("COURSES");
             
             entity.Property(c => c.Id)
-                .HasColumnName("ID");
+                .HasColumnName("ID")
+                .ValueGeneratedOnAdd();
             
             entity.Property(c => c.Name)
                 .HasColumnName("NAME")
