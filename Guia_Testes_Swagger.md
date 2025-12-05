@@ -606,7 +606,7 @@ DELETE /api/v1/plans/{planId}
 | **Skills** | ✅ POST | ✅ GET | ✅ PUT | ✅ DELETE | POST/PUT/DELETE requerem |
 | **Courses** | ✅ POST | ✅ GET | ✅ PUT | ✅ DELETE | POST/PUT/DELETE requerem |
 | **Plans** | ✅ POST (Generate) | ✅ GET | ✅ PUT (Toggle) | ✅ DELETE | Todas requerem |
-| **Auth** | ✅ POST (Register/Login) | ❌ | ❌ | ❌ | Nenhuma requer |
+| **Auth** | ✅ POST (Register/Login) | ✅ | ✅ | ✅ | Todas requerem |
 
 ---
 
